@@ -1,6 +1,4 @@
-'use client'
-
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Header } from './Header/Header'
 import { useDynamicContext, useUserWallets } from '@dynamic-labs/sdk-react-core'
 import { MealCard } from './MealCard'

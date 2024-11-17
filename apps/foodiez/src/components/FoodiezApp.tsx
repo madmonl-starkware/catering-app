@@ -2,13 +2,7 @@ import { useState } from 'react'
 import { Header } from './Header/Header'
 import { useDynamicContext, useUserWallets } from '@dynamic-labs/sdk-react-core'
 import { MealCard } from './MealCard'
-import {CateringContract} from '../providers/starknet-provider'
-
-type Meal = {
-  id: string;
-  date: Date;
-  price: number;
-}
+import { Meal } from '../types/meal'
 
 export const FoodiezApp = () => {
   const {setShowAuthFlow} = useDynamicContext();
@@ -18,9 +12,7 @@ export const FoodiezApp = () => {
   const starknetWallet = wallets.find(wallet => wallet.chain === 'STARK');
   const isWalletConnected = Boolean(starknetWallet);
 
-  console.log('@@@@@CateringContract', CateringContract.get_events('0x03dab0cc9d86baff214b440b6bf322806685a2242c3a7adf865b11ca19754a69',10).then((res: any) => console.log('@@@@@res', res)))
-
-  const onConnectWallet = () => {
+   const onConnectWallet = () => {
     setShowAuthFlow(true);
     setBalance(50);
   }

@@ -11,7 +11,6 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
-  "homepage": "https://madmonl-starkware.github.io/catering-app",
   "dependencies": {
     "@dynamic-labs/ethereum": "^3.6.3",
     "@dynamic-labs/sdk-react-core": "^3.6.3",

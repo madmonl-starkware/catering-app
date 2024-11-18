@@ -24,9 +24,9 @@ export const FoodiezApp = () => {
   }
 
   const futureMeals: Meal[] = [
-    { id: 'meal-1', date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), price: 12.99 },
-    { id: 'meal-2', date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), price: 24.99 },
-    { id: 'meal-3', date: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000), price: 18.99 },
+    { id: 'meal-1', date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), price: 13.99 },
+    { id: 'meal-2', date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), price: 25.99 },
+    { id: 'meal-3', date: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000), price: 19.99 },
   ]
 
   const canAfford = (price: number) => isWalletConnected && balance >= price

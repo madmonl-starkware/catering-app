@@ -1,6 +1,5 @@
 use starknet::ContractAddress;
 
-
 /// Basic information about an event, to be stored in the contract.
 #[derive(Drop, Serde, starknet::Store)]
 struct Preach {
@@ -29,13 +28,14 @@ trait IRegistration<T> {
 
 #[starknet::contract]
 mod registration {
+    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 
     use starknet::storage::{
         Map, Vec, StoragePathEntry,
         StoragePointerWriteAccess, StoragePointerReadAccess, VecTrait,
         MutableVecTrait
     };
-
+    use starknet::ContractAddress;
     use super::{ExtendedPreach, Preach};
 
 
@@ -47,10 +47,14 @@ mod registration {
         preaches: Vec<Preach>,
         /// A map from tweet event ID to number of echos.
         echos: Map<felt252, felt252>,
+        erc_token: ContractAddress,
     }
 
-    // #[generate_trait] is useful for traits with only one implementation. It generates a trait
-    // with the same functions as the implementation.
+    #[constructor]
+    fn constructor(ref self: ContractState, erc_token: ContractAddress) {
+        self.erc_token.write(erc_token);
+    }
+
     /// Helper functions that are not part of the interface.
     #[generate_trait]
     impl PrivateFunctionsImpl of PrivateFunctions {
@@ -66,10 +70,9 @@ mod registration {
             }
         }
     }
+
     #[abi(embed_v0)]
     impl RegistrationImpl of super::IRegistration<ContractState> {
-
-
         fn post(ref self: ContractState, time: felt252, data: ByteArray) {
             let preacher_id = starknet::get_caller_address();
             let event_id = self.next_event_id.read();
@@ -79,6 +82,9 @@ mod registration {
         }
 
         fn like(ref self: ContractState, event_id: felt252) {
+            let token_dispatcher = IERC20Dispatcher { contract_address: self.erc_token.read() };
+            let preacher = self.preaches.at(event_id.try_into().unwrap()).read().preacher_id;
+            token_dispatcher.transfer_from(starknet::get_caller_address(), preacher, 1);
             let echos = self.echos.entry(event_id).read();
             self.echos.entry(event_id).write(echos + 1);
         }
@@ -89,7 +95,9 @@ mod registration {
 
         fn fetch_posts(self: @ContractState, start: u64, end: u64) -> Array<ExtendedPreach> {
             let mut feed = ArrayTrait::<ExtendedPreach>::new();
-            for id in start..end {
+            let last_event: u64 = self.next_event_id.read().try_into().unwrap();
+            let new_end = if end > last_event { last_event } else { end };
+            for id in start..new_end {
                 feed.append(self._get_preach(id));
             };
             feed

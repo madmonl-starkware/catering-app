@@ -66,7 +66,7 @@ mod registration {
         self.next_event_id.read()
     }
 
-    fn get_posts(self: @ContractState, start: u64, end: u64) -> Array<ExtendedPreach> {
+    fn fetch_posts(self: @ContractState, start: u64, end: u64) -> Array<ExtendedPreach> {
         let mut feed = ArrayTrait::<ExtendedPreach>::new();
         for id in start..end {
             feed.append(self._get_preach(id));

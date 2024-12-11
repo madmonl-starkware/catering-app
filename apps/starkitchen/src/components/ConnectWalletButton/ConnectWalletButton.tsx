@@ -43,9 +43,13 @@ export const ConnectWalletButton = ({
 
   return (
     <>
-      <Button onClick={onConnectWallet}>
-        <WalletIcon className="mr-2 h-4 w-4" />
-        Connect Wallet
+      <Button 
+        variant="outline"
+        size="sm"
+        onClick={onConnectWallet}
+      >
+        <WalletIcon type='outline' className="mr-2 h-4 w-4" />
+        <span>Connect Wallet</span>
       </Button>
       <ConnectWalletDialog
         open={open}

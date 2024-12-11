@@ -6,6 +6,7 @@ use starknet::ContractAddress;
 struct Preach {
     id: felt252,
     preacher_id: ContractAddress,
+    time: felt252,
     data: ByteArray,
 }
 
@@ -14,18 +15,17 @@ struct ExtendedPreach {
     id: felt252,
     preacher_id: ContractAddress,
     data: ByteArray,
-    echos: felt252,
+    time: felt252,
+    echo: felt252,
 }
 
 #[starknet::interface]
 trait IRegistration<T> {
-    fn post(ref self: T, data: ByteArray);
+    fn post(ref self: T, time: felt252, data: ByteArray);
     fn like(ref self: T, event_id: felt252);
     fn get_last_post_offset(self: @T) -> felt252;
     fn fetch_posts(self: @T, start: u64, end: u64) -> Array<ExtendedPreach>;
 }
-
-
 
 #[starknet::contract]
 mod registration {
@@ -57,19 +57,25 @@ mod registration {
         fn _get_preach(self: @ContractState, event_id: u64) -> ExtendedPreach {
             let preach = self.preaches.at(event_id).read();
             let echo = self.echos.entry(event_id.try_into().unwrap()).read();
-            ExtendedPreach { id: preach.id, preacher_id: preach.preacher_id, data: preach.data, echos: echo }
+            ExtendedPreach { 
+                id: preach.id,
+                preacher_id: preach.preacher_id,
+                data: preach.data,
+                time: preach.time,
+                echo
+            }
         }
     }
     #[abi(embed_v0)]
     impl RegistrationImpl of super::IRegistration<ContractState> {
 
 
-        fn post(ref self: ContractState, data: ByteArray) {
+        fn post(ref self: ContractState, time: felt252, data: ByteArray) {
             let preacher_id = starknet::get_caller_address();
             let event_id = self.next_event_id.read();
             self.next_event_id.write(event_id + 1);
             // self.emit(Preach { id: event_id, preacher_id, data });
-            self.preaches.append().write(Preach { id: event_id, preacher_id, data });
+            self.preaches.append().write(Preach { id: event_id, preacher_id, time, data });
         }
 
         fn like(ref self: ContractState, event_id: felt252) {

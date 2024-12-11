@@ -1,15 +1,18 @@
+use starknet::ContractAddress;
+
+
 /// Basic information about an event, to be stored in the contract.
 #[derive(Drop, Serde, starknet::Store)]
 struct Preach {
     id: felt252,
-    preacher_id: felt252,
+    preacher_id: ContractAddress,
     data: ByteArray,
 }
 
 #[derive(Drop)]
 struct ExtendedPreach {
     id: felt252,
-    preacher_id: felt252,
+    preacher_id: ContractAddress,
     data: ByteArray,
     echos: felt252,
 }
@@ -50,7 +53,8 @@ mod registration {
         }
     }
 
-    fn post(ref self: ContractState, preacher_id: felt252, data: ByteArray) {
+    fn post(ref self: ContractState, data: ByteArray) {
+        let preacher_id = starknet::get_caller_address();
         let event_id = self.next_event_id.read();
         self.next_event_id.write(event_id + 1);
         // self.emit(Preach { id: event_id, preacher_id, data });

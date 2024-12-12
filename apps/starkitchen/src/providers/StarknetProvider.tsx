@@ -3,12 +3,12 @@ import React from 'react';
 import { sepolia } from '@starknet-react/chains';
 import {
   StarknetConfig,
-  publicProvider,
   argent,
   braavos,
   useInjectedConnectors,
   voyager,
 } from '@starknet-react/core';
+import { RpcProvider } from 'starknet';
 
 export const StarknetProvider = ({
   children,
@@ -24,7 +24,12 @@ export const StarknetProvider = ({
   return (
     <StarknetConfig
       chains={[sepolia]}
-      provider={publicProvider()}
+      provider={() =>
+        new RpcProvider({
+          nodeUrl:
+            'https://starknet-sepolia.g.alchemy.com/v2/iKWI_wZKIJBEOfASy2pbaLbMAQJQat7S',
+        })
+      }
       connectors={connectors}
       explorer={voyager}
       autoConnect

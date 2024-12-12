@@ -58,13 +58,16 @@ export const FreechApp = () => {
     abi: ABI,
     address: CONTRACT_ADDRESS,
     args: [],
+    refetchInterval: 10000,
   });
+
   const { data: freeches, refetch: refetchFreeches } = useReadContract({
     functionName: 'fetch_posts',
     enabled: false,
     abi: ABI,
     address: CONTRACT_ADDRESS,
     args: [Math.max(0, Number(lastPostOffset) - 10), Number(lastPostOffset)],
+    refetchInterval: 10000,
   });
 
   const [loading, setLoading] = useState(true);
@@ -93,33 +96,31 @@ export const FreechApp = () => {
     }
   }, []);
 
-  const handleTopicSelectionComplete = (topics: string[]) => {
-    setSelectedTopics(topics);
-    setShowTopicSelection(false);
-    localStorage.setItem('user_freech_topics', JSON.stringify({ topics }));
-  };
+  // const handleTopicSelectionComplete = (topics: string[]) => {
+  // setSelectedTopics(topics);
+  // setShowTopicSelection(false);
+  // localStorage.setItem('user_freech_topics', JSON.stringify({ topics }));
+  // };
 
   const handleProfileClick = () => {
-    setShowUserProfile(true);
-    setShowTopicSelection(false);
+    // setShowUserProfile(true);
+    // setShowTopicSelection(false);
   };
 
   const handleTopicsClick = () => {
-    setShowUserProfile(false);
-    setShowTopicSelection(true);
+    // setShowUserProfile(false);
+    // setShowTopicSelection(true);
   };
 
-  const handleBackToFeed = () => {
-    setShowUserProfile(false);
-  };
+  // const handleBackToFeed = () => {
+  //   setShowUserProfile(false);
+  // };
 
   const onConnectWallet = async () => {
     setLoading(false);
   };
 
-  const handlePublishFreech = () => {
-
-  }
+  const handlePublishFreech = () => {};
 
   return (
     <div className="min-h-screen bg-background">
@@ -130,7 +131,7 @@ export const FreechApp = () => {
         wallet={starknetWallet}
       />
       <main className="container mx-auto px-4 py-8">
-        {showTopicSelection ? (
+        {/* {showTopicSelection ? (
           <TopicSelection
             selectedTopicsA={selectedTopics}
             onComplete={handleTopicSelectionComplete}
@@ -147,30 +148,31 @@ export const FreechApp = () => {
             </Button>
             <UserProfile {...dummyUserData} />
           </>
-        ) : (
-          <div className="max-w-2xl mx-auto">
-            <h2 className="text-2xl font-bold mb-4">Freech Feed</h2>
-            <NewFreech onPublish={handlePublishFreech} username={dummyUserData.username} />
-            <FreechFeed
-              loading={loading}
-              freeches={
-                (freeches as IRawFreech[])?.map(
-                  ({ data, echos, id, preacher_id, time }) => ({
-                    author: `0x${preacher_id.toString(16)}`,
-                    content: data,
-                    timestamp: time as any,
-                    isFeatured: false,
-                    isLiked: false,
-                    likeCount: Number(echos),
-                    topics: ['Sport', 'World', 'Health'],
-                    id: id.toString(),
-                  }),
-                ) ?? []
-              }
-              selectedTopics={selectedTopics}
-            />
-          </div>
-        )}
+        ) : ( */}
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-2xl font-bold mb-4">Freech Feed</h2>
+          <NewFreech
+            onPublish={handlePublishFreech}
+            username={dummyUserData.username}
+          />
+          <FreechFeed
+            loading={loading}
+            freeches={(freeches ?? [])
+              .map(({ data, echos, id, preacher_id, time }) => ({
+                author: `0x${preacher_id.toString(16)}`,
+                content: data,
+                timestamp: time as any,
+                isFeatured: false,
+                isLiked: false,
+                likeCount: Number(echos),
+                topics: [],
+                id: id.toString(),
+              }))
+              .reverse()}
+            selectedTopics={[]}
+          />
+        </div>
+        {/* )} */}
       </main>
       <Toaster />
     </div>

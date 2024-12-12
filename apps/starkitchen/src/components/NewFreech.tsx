@@ -1,8 +1,11 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { ABI, CONTRACT_ADDRESS } from '../utils/consts'
+import { useContract, useSendTransaction } from '@starknet-react/core'
+import { openFullscreenLoader } from './FullscreenLoaderModal/FullscreenLoaderModal'
 
 interface NewFreechProps {
   onPublish: (content: string) => void
@@ -12,10 +15,33 @@ interface NewFreechProps {
 export function NewFreech({ onPublish, username }: NewFreechProps) {
   const [content, setContent] = useState('')
 
-  const handlePublish = () => {
+
+  const { contract } = useContract({
+    abi: ABI,
+    address: CONTRACT_ADDRESS,
+  });
+
+  const calls = useMemo(() => {
+    return [contract.populate('post', [content])];
+  }, [content]);
+
+  const { sendAsync } = useSendTransaction({
+    calls,
+  });
+  
+  const handlePublish = async () => {
     if (content.trim()) {
-      onPublish(content)
-      setContent('')
+      let closeFullscreenLoader = openFullscreenLoader('Publishing...');
+      try {
+        const {transaction_hash} = await sendAsync();
+        await contract?.providerOrAccount?.waitForTransaction(transaction_hash, {
+          retryInterval: 2e3,
+        });
+        onPublish(content)
+        setContent('')
+      } finally {
+        closeFullscreenLoader?.();
+      }
     }
   }
 

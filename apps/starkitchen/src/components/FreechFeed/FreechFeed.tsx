@@ -1,13 +1,5 @@
-import { useState, useEffect } from 'react'
 import { Freech } from '../Freech/Freech';
 import { FreechSkeleton } from '../FreechSkeleton';
-
-const dummyFreeches = [
-  { id: "1", author: 'Alice', content: 'Just learned about blockchain!', timestamp: '2 hours ago', isFeatured: true, likeCount: 30, isLiked: false, topics: ['Blockchain', 'Technology'] },
-  { id: "2", author: 'Bob', content: 'Excited for the future of decentralized apps!', timestamp: '4 hours ago', isFeatured: false, likeCount: 22, isLiked: true, topics: ['DeFi', 'Web3'] },
-  { id: "3", author: 'Charlie', content: 'Who wants to build a dApp with me?', timestamp: '1 day ago', isFeatured: true, likeCount: 55, isLiked: false, topics: ['Blockchain', 'Development', 'Collaboration'] },
-  { id: "4", author: 'David', content: 'Here\'s an in-depth analysis of the latest crypto trends...', timestamp: '2 days ago', isFeatured: false, likeCount: 40, isLiked: true, topics: ['Cryptocurrency', 'Market Analysis'] },
-]
 
 export interface IRawFreech {
   id: BigInt;

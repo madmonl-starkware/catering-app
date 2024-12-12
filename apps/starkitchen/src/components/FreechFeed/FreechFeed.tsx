@@ -14,7 +14,7 @@ export interface IRawFreech {
   preacher_id: BigInt;
   data: string;
   time: BigInt;
-  echo: BigInt;
+  echos: BigInt;
 }
 
 export interface IFreech {
@@ -35,13 +35,6 @@ interface FreechFeedProps {
 }
 
 export function FreechFeed({ selectedTopics, freeches, loading }: FreechFeedProps) {
-  const filteredFreeches = freeches.filter(freech => 
-    selectedTopics.length === 0 || selectedTopics.some(topic => freech.content.toLowerCase().includes(topic.toLowerCase()))
-  )
-
-  const featuredFreeches = filteredFreeches.filter(freech => freech.isFeatured)
-  const regularFreeches = filteredFreeches.filter(freech => !freech.isFeatured)
-
   if (loading) {
     return (
       <div className="space-y-4">
@@ -54,11 +47,8 @@ export function FreechFeed({ selectedTopics, freeches, loading }: FreechFeedProp
 
   return (
     <div className="space-y-4">
-      {featuredFreeches.map((freech) => (
+      {freeches.map((freech) => (
         <Freech key={`featured-${freech.id}`} {...freech} isOwnFreech={false} onFeature={() => {}} />
-      ))}
-      {regularFreeches.map((freech) => (
-        <Freech key={`regular-${freech.id}`} {...freech} isOwnFreech={false} onFeature={() => {}} />
       ))}
     </div>
   )

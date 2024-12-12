@@ -90,7 +90,6 @@ export const FreechApp = () => {
     } else {
       setSelectedTopics(userFreechTopicsLocalStorage.topics);
       setShowTopicSelection(false);
-      setShowUserProfile(true);
     }
   }, []);
 

@@ -24,6 +24,8 @@ import { Progress } from '@/components/ui/progress';
 import { useSendTransaction, useContract } from '@starknet-react/core';
 import { Badge } from '../ui/badge';
 import { ABI, CONTRACT_ADDRESS } from '@/utils/consts';
+import { openFullscreenLoader } from '../FullscreenLoaderModal/FullscreenLoaderModal';
+import { truncateAddress } from '../../utils/string';
 
 interface FreechProps {
   id: string;
@@ -85,9 +87,14 @@ export function Freech({
     calls,
   });
 
-  const handleLike = () => {
-    alert('Liked!');
-    sendAsync();
+  const handleLike = async () => {
+    let closeLoader;
+    try {
+      closeLoader = openFullscreenLoader('Complete transaction to like the Freech...');
+      await sendAsync();
+    } finally {
+      closeLoader?.();
+    }
   };
 
   const getApproxUSD = (strk: number) => (strk * 0.5).toFixed(2);
@@ -104,7 +111,7 @@ export function Freech({
           <AvatarFallback>{author[0]}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
-          <p className="font-semibold">{author}</p>
+          <p className="font-semibold">{truncateAddress(author)}</p>
           <p className="text-sm text-muted-foreground">{timestamp}</p>
         </div>
         {isFeatured && (

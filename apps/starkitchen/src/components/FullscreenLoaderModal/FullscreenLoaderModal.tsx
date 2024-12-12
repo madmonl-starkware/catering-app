@@ -15,9 +15,9 @@ export const openFullscreenLoader = (text: string) => {
 };
 
 export const FullScreenLoader = ({ text }: { text: string }) => (
-  <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
-    <div className="bg-white p-6 rounded-lg shadow-xl text-center">
-      <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
+  <div className="border fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+    <div className="rounded-primary p-6 rounded-lg shadow-xl text-center">
+      <Loader2 className="h-12 w-12 animate-spin mx-auto mb-4" />
       <p className="text-lg font-semibold">{text}</p>
     </div>
   </div>

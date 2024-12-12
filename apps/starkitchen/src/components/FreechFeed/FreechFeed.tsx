@@ -34,7 +34,7 @@ interface FreechFeedProps {
   loading: boolean
 }
 
-export function FreechFeed({ selectedTopics, freeches, loading }: FreechFeedProps) {
+export function FreechFeed({ freeches, loading }: FreechFeedProps) {
   if (loading) {
     return (
       <div className="space-y-4">

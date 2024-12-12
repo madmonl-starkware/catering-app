@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { useAccount, useReadContract } from '@starknet-react/core';
 import { ABI, CONTRACT_ADDRESS } from '../utils/consts';
+import { NewFreech } from './NewFreech';
 
 const dummyUserData = {
   username: 'JohnDoe',
@@ -117,7 +118,9 @@ export const FreechApp = () => {
     setLoading(false);
   };
 
-  console.log(freeches);
+  const handlePublishFreech = () => {
+
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -148,6 +151,7 @@ export const FreechApp = () => {
         ) : (
           <div className="max-w-2xl mx-auto">
             <h2 className="text-2xl font-bold mb-4">Freech Feed</h2>
+            <NewFreech onPublish={handlePublishFreech} username={dummyUserData.username} />
             <FreechFeed
               loading={loading}
               freeches={
